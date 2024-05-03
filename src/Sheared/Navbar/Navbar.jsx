@@ -18,8 +18,9 @@ const Navbar = () => {
     const navItems = <>
         <li><NavLink to='/'>Home</NavLink></li>
         <li><NavLink to='/about'>About</NavLink></li>
+
         {
-            !user && <>
+            user ? <li><NavLink to='/bookings'>My Bookings</NavLink></li> : <>
                 <li><NavLink to='/login'>Login</NavLink></li>
                 <li><NavLink to='/signUp'>Sign Up</NavLink></li>
             </>
