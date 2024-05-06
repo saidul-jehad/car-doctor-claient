@@ -2,19 +2,28 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import BookingRow from "./BookingRow";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Bookings = () => {
     const { user } = useContext(AuthContext)
     const [bookings, setBookings] = useState([])
+    const axiosSecure = useAxiosSecure()
 
-    const url = `http://localhost:5000/bookings/?email=${user?.email}`
+    // const url = `https://car-doctor-server-2-seven.vercel.app/bookings/?email=${user?.email}`
+    const url = `/bookings/?email=${user?.email}`
     useEffect(() => {
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setBookings(data)
+        // fetch(url, {credentials: 'include'})
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         setBookings(data)
+        //     })
+
+        axiosSecure.get(url)
+            .then(res => {
+                setBookings(res.data)
             })
+
     }, [])
 
     const handleDelete = id => {
@@ -26,7 +35,7 @@ const Bookings = () => {
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                fetch(`http://localhost:5000/bookings/${id}`, {
+                fetch(`https://car-doctor-server-2-seven.vercel.app/bookings/${id}`, {
                     method: "DELETE"
                 })
                     .then(res => res.json())
@@ -52,7 +61,7 @@ const Bookings = () => {
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
-                fetch(`http://localhost:5000/bookings/${id}`, {
+                fetch(`https://car-doctor-server-2-seven.vercel.app/bookings/${id}`, {
                     method: "PATCH",
                     headers: {
                         'content-type': 'application/json'
@@ -103,7 +112,7 @@ const Bookings = () => {
                         </thead>
                         <tbody>
                             {
-                                bookings.map(booking => <BookingRow
+                                bookings?.map(booking => <BookingRow
                                     key={booking._id}
                                     booking={booking}
                                     handleDelete={handleDelete}
